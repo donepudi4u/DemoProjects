@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.itsmyjava.blogspot.hibernate.vo.WapUser" table="wap_user">
+		<id name="userId" type="string" column="user_id">
+		</id>
+		<!-- <property name="firmNum" column="firm_nbr" type="int" /> -->
+		<property name="firmNum" type="int">
+		<formula>
+		(select firm_nbr from wap_user wu where wu.user_id = 'xprk791') 
+		</formula>
+		</property>
+	</class>
+</hibernate-mapping>

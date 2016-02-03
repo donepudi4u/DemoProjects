@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.Oracle10gDialect
+		</property>
+		<property name="hibernate.connection.driver_class">
+			oracle.jdbc.OracleDriver
+		</property>
+		<!-- Assume test is the database name -->
+		<property name="hibernate.connection.url">
+			jdbc:oracle:thin:@dev295.oracle.uprr.com:1521:dev295
+		</property>
+		<property name="hibernate.connection.username">
+			dwap999
+		</property>
+		<property name="hibernate.connection.password">
+			PWD4WAP
+		</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="connection.autocommit">true</property>
+		
+		<!-- List of XML mapping files -->
+		<mapping resource="wap_user.hbm.xml" />
+		<mapping resource="wap_eqmt.hbm.xml" />
+		<mapping resource="wap_application.hbm.xml" />
+		
+	</session-factory>
+</hibernate-configuration>

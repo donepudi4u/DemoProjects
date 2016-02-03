@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.itsmyjava.blogspot.hibernate.vo.WapQuery">
+		<composite-id>
+			<key-property name="qryName" column="qry_name" />
+			<key-property name="userId" column="user_id" />
+			<key-property name="applId" column="appl_id" />
+		</composite-id>
+		<property name="qryName" column="QRY_NAME" />
+		<property name="userId" column="USER_ID" />
+		<property name="applId" column="APPL_ID" />
+		<property name="crtnDate" column="CRTN_DT" />
+		<property name="lastUptedDate" column="LAST_UPTD_DT" />
+		<property name="wbInfoFlag" column="WB_INFO_FLAG" />
+		<property name="acmpEvntFlag" column="ACMP_EVNT_FLAG" />
+		<property name="schEvntFlag" column="SCH_EVNT_FLAG" />
+		<property name="pubFlag" column="PUB_FLAG" />
+		<property name="cmmaDlmdFlag" column="CMMA_DLMD_FLAG" />
+		<property name="eqmtSortInd" column="EQMT_SORT_IND" />
+		<property name="rptvInqyDesc" column="RPTV_INQY_DESC" />
+		<property name="inmdFlag" column="INMD_FLAG" />
+		<property name="yardNumber" column="YARD_NBR" />
+		<property name="trkNumber" column="TRK_NBR" />
+		<property name="crc7" column="CRC7" />
+		<property name="trkDirectoin" column="TRK_DIR" />
+		<property name="trkInqyDesc" column="TRK_INQY_DESC" />
+		<property name="pubDetailFlag" column="PUB_DTL_FLAG" />
+		<property name="chasisEvntFlag" column="CHAS_EVNT_FLAG" />
+	</class>
+
+</hibernate-mapping>

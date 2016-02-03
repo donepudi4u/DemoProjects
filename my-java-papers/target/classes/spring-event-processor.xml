@@ -1,0 +1,70 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+	<bean id="amaJmsDestinationResolver" class="org.springframework.jms.support.destination.JndiDestinationResolver">
+		<property name="jndiEnvironment">
+			<props>
+				<prop key="java.naming.factory.initial">com.tibco.tibjms.naming.TibjmsInitialContextFactory</prop>
+				<prop key="java.naming.provider.url">tcp://localhost:7222,tcp://localhost:7224</prop>
+				<prop key="java.naming.security.principal">dama999</prop>
+				<prop key="java.naming.security.credentials">UPwqd797</prop>
+			</props>
+		</property>
+	</bean> 
+	
+	<bean id="connectionTemplate" class="org.springframework.jndi.JndiTemplate">
+		<property name="environment">
+			<props>
+				<prop key="java.naming.factory.initial">com.tibco.tibjms.naming.TibjmsInitialContextFactory</prop>
+				<prop key="java.naming.provider.url">tcp://localhost:7222,tcp://localhost:7224</prop>
+				<prop key="java.naming.security.principal">dama999</prop>
+				<prop key="java.naming.security.credentials">UPwqd797</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	<bean id="baseEventProcessor" class="com.uprr.app.ama.listener.BaseEventProcessor" abstract="true">
+		<property name="eventMessageService" ref="eventMessageService"/>
+		<property name="appService" ref="appService"/>
+		<property name="appDAO" ref="appDAO"/>
+		<property name="eventDAO" ref="eventDAO"/>
+	</bean>
+	
+	<bean id="CEO-QCF-00" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="proxyInterface">
+			<value>javax.jms.QueueConnectionFactory</value>
+		</property>
+		<property name="jndiTemplate" ref="connectionTemplate"/>
+		<property name="jndiName" value="CEO-QCF-00"/>
+	</bean>
+	
+	<bean id="ceoAuthenticatingQueueConnectionFactory" class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">
+		<property name="targetConnectionFactory" ref="CEO-QCF-00"/>
+		<property name="username" value="dama999"/>
+		<property name="password" value="UPwqd797"/>
+	</bean>
+	<bean id="ceoEventListener" class="com.myjavapapers.jms.messages.JMSMessageListnerClass">
+	</bean>
+	
+	<bean id="baseMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer102" abstract="true">
+		<property name="concurrentConsumers" value="1"/>
+		<property name="sessionTransacted" value="true"/>
+		<property name="destinationResolver" ref="amaJmsDestinationResolver"/>
+	</bean>
+	
+	<bean id="ceoEventListenerContainer" parent="baseMessageListenerContainer">
+		<property name="connectionFactory" ref="ceoAuthenticatingQueueConnectionFactory"/>
+		<property name="destinationName" value="COM.PROKARMA.TEST.QUEUE.ONE"/>
+		<property name="messageListener" ref="ceoEventListener"/>
+	</bean>
+	
+</beans>
