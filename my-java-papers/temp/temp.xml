@@ -1,0 +1,350 @@
+<RailCarrierFreightDetailsAndInvoice>
+	<BeginningSegmentForCarrierInvoice>
+		<InvoiceNumber>274465919</InvoiceNumber>
+		<ShipmentMethodOfPayment>PP</ShipmentMethodOfPayment>
+		<DateTimeReference Qualifier="964" SegmentId="DTM">
+			<Date>2015-05-18</Date>
+		</DateTimeReference>
+		<DateTimeReference Qualifier="AAG" SegmentId="DTM">
+			<Date>2015-06-02</Date>
+		</DateTimeReference>
+		<NetAmountDue>0.00</NetAmountDue>
+		<StandardCarrierAlphaCode>UP</StandardCarrierAlphaCode>
+		<TransportationMethodTypeCode>R</TransportationMethodTypeCode>
+		<ShipmentIdentificationNumber>02506734-02
+		</ShipmentIdentificationNumber>
+		<WeightUnitCode>L</WeightUnitCode>
+		<CurrencyCode>USD</CurrencyCode>
+	</BeginningSegmentForCarrierInvoice>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="BM">02506734-02
+		</ReferenceIdentificationData>
+		<Date>2015-05-18</Date>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="CO">008323
+		</ReferenceIdentificationData>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="ZZ2">L
+		</ReferenceIdentificationData>
+		<Date>2015-05-18</Date>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="ZRR">UP
+		</ReferenceIdentificationData>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="ZMR">UP
+		</ReferenceIdentificationData>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="PR">DPQ
+			202
+		</ReferenceIdentificationData>
+		<FreeFormDescription>UP</FreeFormDescription>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="Z0">020199
+		</ReferenceIdentificationData>
+	</ReferenceIdentification>
+	<ReferenceIdentification>
+		<ReferenceIdentificationData Qualifier="MA">02506734
+		</ReferenceIdentificationData>
+		<Date>2015-05-18</Date>
+	</ReferenceIdentification>
+	<EquipmentDetailsLoop>
+		<EquipmentDetails SegmentId="N7">
+			<EquipmentStructure>
+				<Initial>EMHU</Initial>
+				<EquipmentNumber>831161</EquipmentNumber>
+				<DescriptionCode>CN</DescriptionCode>
+				<Length>05300</Length>
+				<EquipmentType>U287</EquipmentType>
+			</EquipmentStructure>
+			<Weight Qualifier="N">5000</Weight>
+			<TareWeight Qualifier="LC">0</TareWeight>
+			<WeightAllowance>0</WeightAllowance>
+			<Dunnage>0</Dunnage>
+			<StandardCarrierAlphaCode>EMPU</StandardCarrierAlphaCode>
+			<StandardCarrierAlphaCode>UP</StandardCarrierAlphaCode>
+			<Volume Qualifier="E">3955.00</Volume>
+			<Width>102.00</Width>
+			<CarTypeCode>U287</CarTypeCode>
+			<WeightCapacity>29</WeightCapacity>
+			<CubicCapacity>3955</CubicCapacity>
+		</EquipmentDetails>
+		<SealNumbers SegmentId="M7">
+			<SealNumber>898951</SealNumber>
+		</SealNumbers>
+		<EquipmentOrdered SegmentId="N5">
+			<EquipmentLength>0</EquipmentLength>
+			<WeightCapacity>0</WeightCapacity>
+			<CubicCapacity>0</CubicCapacity>
+			<Height>0.00</Height>
+		</EquipmentOrdered>
+	</EquipmentDetailsLoop>
+	<WaybillReference>
+		<WaybillNumber>151663</WaybillNumber>
+		<Date>2015-05-18</Date>
+	</WaybillReference>
+	<Destination SegmentId="D9">
+		<FreightStationAccountingCode>53366</FreightStationAccountingCode>
+		<GeographicLocation SegmentId="N4">
+			<CityName>DALLAS</CityName>
+			<StateOrProvinceCode>TX</StateOrProvinceCode>
+			<CountryCode>US</CountryCode>
+			<SPLC>667300000</SPLC>
+		</GeographicLocation>
+	</Destination>
+	<Origin SegmentId="F9">
+		<FreightStationAccountingCode>00071</FreightStationAccountingCode>
+		<GeographicLocation SegmentId="N4">
+			<CityName>SEATTLE</CityName>
+			<StateOrProvinceCode>WA</StateOrProvinceCode>
+			<CountryCode>US</CountryCode>
+			<SPLC>845200000</SPLC>
+		</GeographicLocation>
+	</Origin>
+	<Destination SegmentId="D9">
+		<FreightStationAccountingCode>53366</FreightStationAccountingCode>
+		<GeographicLocation SegmentId="N4">
+			<CityName>DALLAS</CityName>
+			<StateOrProvinceCode>TX</StateOrProvinceCode>
+			<CountryCode>US</CountryCode>
+			<SPLC>667300000</SPLC>
+		</GeographicLocation>
+	</Destination>
+	<Origin SegmentId="F9">
+		<FreightStationAccountingCode>00071</FreightStationAccountingCode>
+		<GeographicLocation SegmentId="N4">
+			<CityName>SEATTLE</CityName>
+			<StateOrProvinceCode>WA</StateOrProvinceCode>
+			<CountryCode>US</CountryCode>
+			<SPLC>845200000</SPLC>
+		</GeographicLocation>
+	</Origin>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="RR">UNION PACIFIC RAILROAD COMPANY</Name>
+		</NameStructure>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="RI">UP</Name>
+		</NameStructure>
+		<AddressInformation>UNION PACIFIC RAILROAD</AddressInformation>
+		<AddressInformation>P.O. BOX 502453</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>SAINT LOUIS</CityName>
+			<StateOrProvinceCode>MO</StateOrProvinceCode>
+			<PostalCode>63150-2453</PostalCode>
+		</GeographicLocation>
+		<AdministrativeContact SegmentId="PER">
+			<ContactFunctionCode>AD</ContactFunctionCode>
+			<Name>CUSTOMERS - WEB</Name>
+			<CommunicationNumber Qualifier="EM">WWW.UP.COM/AOW
+			</CommunicationNumber>
+			<CommunicationNumber Qualifier="EX">(800) 925-6396
+			</CommunicationNumber>
+		</AdministrativeContact>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="ZZ1">STREAMLINE</Name>
+		</NameStructure>
+		<AddressInformation>222 S 15TH STREET</AddressInformation>
+		<AddressInformation>SUITE 402 S</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>OMAHA</CityName>
+			<StateOrProvinceCode>NE</StateOrProvinceCode>
+			<PostalCode>68102</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="SH">STREAMLINE</Name>
+			<FreeFormDescription>SHIPPER</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>222 S 15TH ST STE 402S</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>OMAHA</CityName>
+			<StateOrProvinceCode>NE</StateOrProvinceCode>
+			<PostalCode>68102</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="CN">STREAMLINE</Name>
+			<FreeFormDescription>CONSIGNEE</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>222 S 15TH ST STE 402S</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>OMAHA</CityName>
+			<StateOrProvinceCode>NE</StateOrProvinceCode>
+			<PostalCode>68102</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<NameLoop />
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="PF">STREAMLINE</Name>
+			<FreeFormDescription>PARTY TO RECEIVE FREIGHT BILL
+			</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>222 S 15TH ST STE 402S</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>OMAHA</CityName>
+			<StateOrProvinceCode>NE</StateOrProvinceCode>
+			<PostalCode>68102</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="AQ">WORLDWIDE EXPRESS OPERATIONS L</Name>
+			<FreeFormDescription>ACCOUNT OF (DESTINATION PARTY)
+			</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>2828 ROUTH ST STE 400</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>DALLAS</CityName>
+			<StateOrProvinceCode>TX</StateOrProvinceCode>
+			<PostalCode>75201</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="BN">PROJECT SOLE</Name>
+			<FreeFormDescription>BENEFICIAL OWNER</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>2156 CHENAULT DRIVE</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>CARROLLTON</CityName>
+			<StateOrProvinceCode>TX</StateOrProvinceCode>
+			<PostalCode>75006</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="C1">STREAMLINE</Name>
+			<FreeFormDescription>IN CARE OF PARTY NO. 1</FreeFormDescription>
+		</NameStructure>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="N1">STREAMLINE RAIL VENDOR SUPP</Name>
+			<FreeFormDescription>NOTIFY PARTY NO. 1</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>PER402-501-3331</AddressInformation>
+	</NameLoop>
+	<NameLoop>
+		<NameStructure SegmentId="N1">
+			<Name EntityIdentifierCode="SF">PROPET USA</Name>
+			<FreeFormDescription>SHIP FROM</FreeFormDescription>
+		</NameStructure>
+		<AddressInformation>2415 W. VALLEY HWY N.</AddressInformation>
+		<GeographicLocation SegmentId="N4">
+			<CityName>AUBURN</CityName>
+			<StateOrProvinceCode>WA</StateOrProvinceCode>
+			<PostalCode>98001</PostalCode>
+			<CountryCode>US</CountryCode>
+		</GeographicLocation>
+	</NameLoop>
+	<RouteInformation RouteType="REVENUE" SegmentId="R2">
+		<StandardCarrierAlphaCode>UP</StandardCarrierAlphaCode>
+		<RoutingSequenceCode>S</RoutingSequenceCode>
+		<IntermodalServiceCode>25</IntermodalServiceCode>
+	</RouteInformation>
+	<RouteInformation RouteType="MOVEMENT" SegmentId="R2">
+		<StandardCarrierAlphaCode>UP</StandardCarrierAlphaCode>
+		<RoutingSequenceCode>S</RoutingSequenceCode>
+		<IntermodalServiceCode>25</IntermodalServiceCode>
+	</RouteInformation>
+	<RouteCodes>
+		<RouteCode>L</RouteCode>
+		<AgentShipperRoutingCode>S</AgentShipperRoutingCode>
+	</RouteCodes>
+	<AssignedNumberLoop>
+		<AssignedNumber>1</AssignedNumber>
+		<DescMarksAndNumbers>
+			<LadingLineItemNumber>1</LadingLineItemNumber>
+			<LadingDescription>PALLETS FAK</LadingDescription>
+			<STCC>4611110</STCC>
+			<CommodityCode Qualifier="T">4611110</CommodityCode>
+			<ReferenceIdentificationData>FREIGHT ALL KINDS, (FAK) OR ALL
+				FREIGHT RATE SHIP- MENTS, NEC, OR TRAILER-ON FLATCAR SHIPMENTS,
+				COMMERCIAL (EXCEPT IDEN- TIFIED BY COMMODITIES, THEN CODE BY
+				COMMODITY)
+			</ReferenceIdentificationData>
+		</DescMarksAndNumbers>
+		<LineItemQuantityAndWeightLoop>
+			<LineItemQuantityAndWeight>
+				<LadingLineItemNumber>1</LadingLineItemNumber>
+				<Weight Qualifier="N">5000</Weight>
+				<RateAndCharges>
+					<LadingLineItemNumber>1</LadingLineItemNumber>
+					<FreightRate Qualifier="PA">207500</FreightRate>
+					<Charge>2075.00</Charge>
+					<PrepaidAmount>2075.00</PrepaidAmount>
+				</RateAndCharges>
+			</LineItemQuantityAndWeight>
+		</LineItemQuantityAndWeightLoop>
+		<LineItemQuantityAndWeightLoop>
+			<LineItemQuantityAndWeight>
+				<LadingLineItemNumber>1</LadingLineItemNumber>
+				<RateAndCharges>
+					<LadingLineItemNumber>1</LadingLineItemNumber>
+					<Charge>446.13</Charge>
+					<PrepaidAmount>446.13</PrepaidAmount>
+					<SpecialChargeOrAllowanceCode>SUR</SpecialChargeOrAllowanceCode>
+					<SpecialChargeDescription>SURCHARGE</SpecialChargeDescription>
+				</RateAndCharges>
+			</LineItemQuantityAndWeight>
+			<PriceAuthorityIdentification>
+				<ReferenceIdentificationData Qualifier="PR">202
+				</ReferenceIdentificationData>
+				<TariffAgencyCode>UP</TariffAgencyCode>
+				<IssuingCarrierIdentifier>DPQ</IssuingCarrierIdentifier>
+			</PriceAuthorityIdentification>
+		</LineItemQuantityAndWeightLoop>
+	</AssignedNumberLoop>
+	<TotalWeightAndCharges>
+		<Weight Qualifier="B">5000</Weight>
+		<Charge>2521.13</Charge>
+		<PrepaidAmount>2521.13</PrepaidAmount>
+		<CurrentBillAmount>2521.13</CurrentBillAmount>
+	</TotalWeightAndCharges>
+	<UserExtensions>
+		<UserExtension Name="FormatCode">DA</UserExtension>
+		<UserExtension Name="XslName">Dbill</UserExtension>
+		<UserExtension Name="Version">1</UserExtension>
+		<UserExtension Name="ScheduleReason">ORIGINAL BILL</UserExtension>
+		<UserExtension Name="ScheduleReasonCode">ORIGINAL BILL</UserExtension>
+		<UserExtension Name="ReceivableId">274465919</UserExtension>
+		<UserExtension Name="TotalPaymentAmount">2521.13</UserExtension>
+		<UserExtension Name="AdjustmentAppliedAmount">0.00</UserExtension>
+		<UserExtension Name="PaymentAppliedAmount">2521.13</UserExtension>
+		<UserExtension Name="PaymentID">9999999999999: STBD</UserExtension>
+		<UserExtension Name="LastPaymentDate">YYYYMMDD: STBD</UserExtension>
+		<UserExtension Name="ServiceType">FREIGHT</UserExtension>
+		<UserExtension Name="AccountTypeDescription">FREIGHT</UserExtension>
+		<UserExtension Name="BillAge">99999</UserExtension>
+		<UserExtension Name="SenderEmail">"R CUSTOMERS - WEB"NOREPLY@UP.COM
+		</UserExtension>
+		<UserExtension Name="CreatedDate">2016-03-22</UserExtension>
+		<UserExtension Name="BillSource">RSP</UserExtension>
+		<UserExtension Name="CreditTerms">15</UserExtension>
+		<UserExtension Name="BillingGroup">OTHER INTERMODAL</UserExtension>
+		<UserExtension Name="SystemRoadCode">20</UserExtension>
+		<UserExtension Name="ScndWbNbr">151663</UserExtension>
+		<UserExtension Name="AnnualFinanceChargeRate">0</UserExtension>
+		<UserExtension Name="MonthlyFinanceChargeRate">0</UserExtension>
+		<UserExtension Name="DailyFinanceChargeRate">0</UserExtension>
+	</UserExtensions>
+</RailCarrierFreightDetailsAndInvoice>

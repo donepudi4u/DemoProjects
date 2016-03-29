@@ -28,7 +28,5 @@
 	<bean id="employeebean" class="com.itsmyjava.blogspot.spring.ioc.EmployeeBean" parent="commonUtility">
 		<property name="companyName" value="Prokarma"></property>
 	</bean>
-	
-	<!-- <bean id="personBean" class="com.itsmyjava.blogspot.spring.ioc.PersonBean" parent="commonUtility"></bean> -->
 
 </beans>
