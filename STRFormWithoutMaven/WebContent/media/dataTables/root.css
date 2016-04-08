@@ -1,0 +1,410 @@
+body{
+    font-size: 14px ;
+    font-family: Arial, sans-serif;
+    cursor: default;
+}
+   textarea
+{
+     width:100%;
+     font-size: 14px ;
+    font-family: Arial, sans-serif;
+    //height:100%;
+}
+div.strinstructions {
+    resize:both;
+    overflow:auto; /* something other than visible */
+}
+a, .link {
+    color: blue;
+    text-decoration: underline;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    margin: 5px
+}
+
+button {
+    outline: none;
+    //box-sizing: border-box;
+}
+
+input, textarea, select {
+    background: none;
+    //box-sizing: border-box;
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #ccc;
+    font-style: italic;
+}
+
+input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
+    color: #ccc;
+    font-style: italic;
+}
+
+input::-moz-placeholder, textarea::-moz-placeholder {  /* Firefox 19+ */
+    color: #ccc;
+    font-style: italic;
+}
+
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {  
+    color: #ccc;
+    font-style: italic;
+}
+
+.generalerror-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    box-shadow: inset 0px 0px 10px 10px rgba(255, 0, 0, .5);
+    z-index: -100;
+}
+
+.generalerror {
+    color: red;
+    font-size: 1.5em;
+    font-weight: bolder;
+}
+
+.error {
+    font-size: 150%;
+    color: red;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-state-disabled .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-tabs-loading .ui-tabs-anchor {
+    cursor: default;
+}
+
+.ui-widget-content a {
+    color: blue;
+}
+
+.ui-buttonset, .ui-buttonset .ui-button {
+    margin-right: 0px;
+}
+
+.ui-contextmenu {
+    position: absolute;
+}
+
+.ui-contextpointer {
+    cursor: context-menu;
+}
+
+.ui-dialog {
+    position: fixed; /* Allows dialog to not scroll if the window is itself scrolled. */
+    box-shadow: 10px 10px 5px rgba(136, 136, 136, .5);
+    overflow: visible;
+}
+
+.ui-dialog.absolute {
+    position: absolute;
+}
+
+.ui-dialog .ui-dialog-content {
+    overflow: visible; /* Dialog content overflow must be visible, just like the dialog itself. */
+}
+
+.ui-tabs-nav .ui-tabs-anchor {
+    font-weight: bold;
+}
+
+.ui-widget {
+    font-size: 1.0em;
+}
+.ui-widget-overlay {
+    background: rgba(170, 170, 170, 0.5);
+    opacity: 1;
+    filter: Alpha(Opacity=100);
+}
+
+.ui-widget-header .ui-state-active {
+    color: #000000;
+}
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited {
+	color: #000000;
+}
+
+/* Make menus appear above everything else and add a shadow.*/
+.ui-menu {
+    z-index: 9999;
+    box-shadow: 10px 10px 5px rgba(136, 136, 136, .5);
+    width: auto !important;
+    white-space: nowrap !important;
+}
+.ui-menu .ui-menu-item a {
+    /*display: inline-block;*/
+}
+.ui-selectmenu-menu.ui-selectmenu-popup {
+    overflow-x: hidden;
+}
+.ui-selectmenu-button .ui-menu {
+    box-shadow: none;
+}
+
+/* Make select menu header and footers appear above the menu. */
+.ui-selectmenu-header, .ui-selectmenu-footer {
+    z-index: 10000;
+}
+
+.ui-selectmenu-popup .ui-menu {
+    box-shadow: none;
+}
+
+/* Move the paginate section up a bit to make it prettier. */
+.dataTables_paginate { 
+    margin-bottom: 5px;
+}
+/* Force the paginate buttons to appear with white text. */
+.dataTables_paginate .ui-state-default {
+    color: white !important;
+}
+/* Make the header and footer darker so the white text comes out more. */
+.dataTables_wrapper .ui-widget-header {
+    /*background-color: #0078ae;
+    background-image: url(jquery/images/ui-bg_glass_45_0078ae_1x400.png);*/
+}
+/* Row selection color. */
+.dataTable tr.even.row_selected td {
+    background-color: #B0BED9 !important;
+}
+.dataTable tr.odd.row_selected td {
+    background-color: #9FAFD1 !important;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin: 0px;
+}
+
+.dataTables_scroll .ui-button-text-only .ui-button-text {
+    padding: .2em .5em;
+}
+
+.dataTable .tablebutton {
+    padding: 1px 5px 1px 5px;
+}
+
+/* Make the menubar darker so the white text comes out. */
+.ui-menubar {
+    /*background-color: #0078ae;
+    background-image: url(jquery/images/ui-bg_glass_45_0078ae_1x400.png);*/
+    z-index: 9999;
+}
+
+/* Make the text of a top level item when hovering easier to see. */
+.ui-menubar .ui-state-active a.ui-state-hover {
+    color: #026890;
+}
+
+/* Make menu items use the pointer cursor. */
+.ui-menu .ui-menu-item {
+    list-style-image: none;
+    list-style-type: none;
+    cursor: pointer;
+}
+
+.ui-state-disabled .ui-menu .ui-menu-item {
+    cursor: default;
+}
+
+/* Change sub-menu icons so they can be seen. */
+.ui-menu-item .ui-menu-icon {
+    margin-top: 5px;
+    background-position: -32px -16px;
+    background-image: url(jquery-ui-1.10.4/images/ui-icons_056b93_256x240.png);
+}
+.ui-menu-item .ui-state-active .ui-menu-icon {
+    background-position: -32px -16px;
+    background-image: url(jquery-ui-1.10.4/images/ui-icons_f5e175_256x240.png);
+}
+
+/* Similar to the top-level item text, make the sub menu items darker so they can be seen. */
+.ui-menubar .ui-menu .ui-state-focus {
+    color: #026890;
+}
+
+.ui-input {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0;
+    vertical-align: middle;
+}
+.ui-input-input {
+    outline: none;
+    border: 0px;
+    border-radius: 2px;
+    background: none;
+    color: inherit;
+    padding: 0;
+    vertical-align: middle;
+    margin: 0;
+    /*
+    margin-left: .4em;
+    margin-right: .4em;
+    */
+}
+.custom-input-box {
+    -webkit-box-shadow: 0 0 5px #aaa;
+    box-shadow: 0 0 5px #aaa;
+    border-width: 2px;
+    cursor: text;
+    padding: 3px 5px 4px 5px;
+}
+.custom-input-box-focus {
+    border-color: #2D95DF;
+}
+.custom-input-box-hover {
+    border-color: #74B3E0;
+}
+.custom-input-box.grey-input {
+    cursor: inherit;
+}
+
+.custom-tooltip-styling {
+    font-size: 80%;
+    box-shadow: 5px 5px 3px rgba(136, 136, 136, .5);
+}
+
+.buttonpane {
+    margin-top: 0.5em;
+    text-align: right;
+}
+
+.grey-input {
+    background: lightgray;
+    color: black;
+}
+
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 6px 5px 6px 5px;
+    word-wrap: break-word;
+/*    white-space: nowrap;*/
+}
+
+table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    padding: 6px 5px 6px 5px;
+    word-wrap: break-word;
+/*    white-space: nowrap;*/
+}
+
+.selectable tr {
+    cursor: cell;
+}
+
+table.dataTable td.editable {
+    cursor: text;
+}
+
+table.dataTable tr.deleted td.editable {
+    cursor: not-allowed;
+}
+
+/*Even rows that are changed*/
+table.dataTable.stripe tbody tr.even.changed:not(.selected), table.dataTable.display tbody tr.even.changed:not(.selected) {
+    background-color: #fff19f;
+}
+table.dataTable.display tbody tr.even.changed:not(.selected) > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.changed:not(.selected) > .sorting_1 {
+    background-color: #fff05f;
+}
+
+/*Odd rows that are changed*/
+table.dataTable.stripe tbody tr.odd.changed:not(.selected), table.dataTable.display tbody tr.odd.changed:not(.selected) {
+    background-color: #fff05f;
+}
+table.dataTable.display tbody tr.odd.changed:not(.selected) > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.changed:not(.selected) > .sorting_1 {
+    background-color: #ffe05f;
+}
+
+/*Rows that are changed and hovered*/
+table.dataTable.stripe tbody tr.changed:not(.selected):hover, table.dataTable.display tbody tr.changed:not(.selected):hover {
+    background-color: #ffe05f;
+}
+table.dataTable.display tbody tr.changed:not(.selected):hover > .sorting_1, table.dataTable.order-column.stripe tbody tr.changed:not(.selected):hover > .sorting_1 {
+    background-color: #ffd044;
+}
+
+/*Strike through text if deleted (Put line through the TD elements beneath the rows to allow a different color to be applied)*/
+table.dataTable.stripe tbody tr.deleted td, table.dataTable.display tbody tr.deleted td {
+    text-decoration: line-through;
+}
+
+/*Even rows that are deleted*/
+table.dataTable.stripe tbody tr.even.deleted:not(.selected), table.dataTable.display tbody tr.even.deleted:not(.selected) {
+    background-color: #ffb6b6;
+}
+table.dataTable.display tbody tr.even.deleted:not(.selected) > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.deleted:not(.selected) > .sorting_1 {
+    background-color: #ff8888;
+}
+
+/*Odd rows that are deleted*/
+table.dataTable.stripe tbody tr.odd.deleted:not(.selected), table.dataTable.display tbody tr.odd.deleted:not(.selected) {
+    background-color: #ff8888;
+}
+table.dataTable.display tbody tr.odd.deleted:not(.selected) > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.deleted:not(.selected) > .sorting_1 {
+    background-color: #ff4f4f;
+    color: white;
+}
+
+/*Rows that are deleted and hovered*/
+table.dataTable.stripe tbody tr.deleted:not(.selected):hover, table.dataTable.display tbody tr.deleted:not(.selected):hover {
+    background-color: #ff4f4f;
+    color: white;
+}
+table.dataTable.display tbody tr.deleted:not(.selected):hover > .sorting_1, table.dataTable.order-column.stripe tbody tr.deleted:not(.selected):hover > .sorting_1 {
+    background-color: #ff2f2f;
+    color: white;
+}
+
+table.dataTable td.editing {
+    padding: 0px;
+}
+table.dataTable td.editing label {
+    padding-top: 2px;
+}
+
+.table-info {
+    float: left;
+    padding-top: .55em;
+}
+.table-updated {
+    float: right;
+    padding-top: .55em;
+}
+#editor {
+	max-height: 150px;
+	height: 150px;
+	background-color: white;
+	border-collapse: separate; 
+	border: 1px solid rgb(204, 204, 204); 
+	padding: 4px; 
+	box-sizing: content-box; 
+	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset; 
+	box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+	border-top-right-radius: 3px; border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px; border-top-left-radius: 3px;
+	overflow: scroll;
+	outline: none;
+}
+div[data-role="editor-toolbar"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

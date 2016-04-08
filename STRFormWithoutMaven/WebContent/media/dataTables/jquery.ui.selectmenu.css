@@ -1,0 +1,136 @@
+.ui-selectmenu-wrapper {
+    padding: 0px;
+    margin: 0px;
+    display: inline-block;
+}
+.ui-selectmenu-button {
+    overflow: hidden;
+    text-decoration: none;
+}
+.ui-selectmenu-button .ui-button-text {
+    text-align: left;
+    padding: .29em 2.1em .29em .4em;
+}
+.ui-selectmenu-button.ui-button-disabled .ui-menu-item,
+.ui-selectmenu-menu .ui-state-disabled .ui-menu-item {
+    cursor: default;
+}
+/* Remove the shadow that comes with the mock menu inside the button. */
+.ui-selectmenu-button .ui-menu {
+    padding: 0px;
+    overflow: hidden;
+    display: table;
+}
+.ui-selectmenu-button .ui-menu-item {
+    padding: 0px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.ui-selectmenu-menu .ui-menu {
+    overflow: auto;
+    overflow-x: visible;
+    padding-bottom: 1px;
+    white-space: nowrap;
+}
+/* Center the checkbox of a selection. */
+.ui-selectmenu-menu .ui-menu .ui-icon {
+    top: 0;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    left: 3px;
+}
+/* Remove margin from all menu items, regardless if they are focused or not. */
+.ui-selectmenu-menu .ui-menu .ui-menu-item {
+    margin: 0px;
+}
+/* Enforce a border on all menu items if they are not "highlighted" nor "focused". */
+.ui-selectmenu-menu .ui-menu .ui-menu-item:not(.ui-state-highlight):not(.ui-state-focus) {
+    border: 1px solid transparent;
+}
+/* All select menus must be absolutely positioned unless they are inline. */
+.ui-selectmenu-menu {
+    position: absolute;
+}
+/* Inline menus override the absolute positioning, and are set to static. */
+.ui-selectmenu-inline {
+    position: static;
+}
+/* Inline menus have a default maximum height. */
+.ui-selectmenu-inline .ui-menu {
+    max-height: 8em;
+}
+/* Used to hide the check icon on an unselected option. */
+.ui-selectmenu-menu .ui-selectmenu-nocheck {
+    background-image: none;
+}
+/* An optgroup is classified as disabled, this restores the opacity. */
+.ui-selectmenu-menu .ui-selectmenu-optgroup {
+    opacity: 100;
+}
+/* The UI applies a margin to disabled elements, remove this. */
+.ui-selectmenu-menu .ui-state-disabled {
+    margin: 0px;
+}
+/* Bold the text of an optgroup. */
+.ui-selectmenu-menu .ui-selectmenu-optgroup {
+    font-weight: bold;
+}
+/* Used to apply a text-indent to items below an optgroup. */
+.ui-selectmenu-menu .ui-selectmenu-indent {
+    padding-left: 1.4em;
+}
+/* If not a multiple selection, hide all checkboxes. */
+.ui-selectmenu-single .ui-selectmenu-checkbox {
+    display: none;
+}
+/* If not a single selection, remove the left and right padding of the option text. */
+.ui-selectmenu-single .ui-menu-item {
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+}
+
+/* 
+ * The menu within a popup normally cannot be scrolled.  This is altered if the 
+ * user moves the mouse over the menu. 
+ */
+.ui-selectmenu-popup .ui-menu {
+    overflow: hidden;
+}
+
+/* Popup headers and footers, to show a shadow as the menu is scrolled past the boundary. */
+.ui-selectmenu-header, .ui-selectmenu-footer {
+    display: none;
+    position: absolute;
+    width: 100%;
+}
+.ui-selectmenu-header {
+    top: 0;
+}
+.ui-selectmenu-footer {
+    bottom: 0;
+}
+/* Popup headers and footers add a shadow. */
+.ui-selectmenu-popup .ui-selectmenu-header, .ui-selectmenu-popup .ui-selectmenu-footer {
+    display: block;
+    box-shadow: 0px 0px 20px 20px #cccccc;
+}
+
+/*
+ * Used to hide the hidden, but visible, support elements.  They must be
+ * visible to allow the browser to properly size them (i.e. they cannot use ui-helper-hidden-accessible)
+ */
+.ui-selectmenu-hidden {
+    position: fixed;
+    top: -50000px;
+    left: -50000px;
+}
+/*
+ * Remove the left padding for an indented hidden menu item. This is necessary
+ * to properly calculate the width the button must be.
+ */
+.ui-selectmenu-hidden .ui-selectmenu-indent {
+    padding-left: 0px;
+    padding-right: 0px;
+}
