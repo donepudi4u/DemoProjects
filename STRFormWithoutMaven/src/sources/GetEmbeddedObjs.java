@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,8 +23,8 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 
 //import.javax.servlet.RequestDispatcher;
-//@WebServlet(urlPatterns = {"/GetEmbeddedObjs"})
-//@MultipartConfig
+@WebServlet(urlPatterns = {"/GetEmbeddedObjs"})
+@MultipartConfig
 public class GetEmbeddedObjs extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

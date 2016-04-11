@@ -11,6 +11,7 @@ body{
     //height:100%;
 }
 div.strinstructions {
+	position:relative;
     resize:both;
     overflow:auto; /* something other than visible */
 }

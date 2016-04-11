@@ -5,10 +5,29 @@
  */
 package sources;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.jazz.str.vo.RichTextFieldVo;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+//import com.mongodb.DBCursor;
+import com.mongodb.Mongo;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
+
+import java.awt.image.ImageFilter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -18,8 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.RequestDispatcher;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -32,18 +51,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FilenameUtils;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-//import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSInputFile;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 @WebServlet(urlPatterns = {"/NewClass_multi"})
 @MultipartConfig
@@ -59,13 +69,13 @@ public class NewClass_multi extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         List<FileItem> items;
         try {
             items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request); //content coming from client
             Mongo mongo = new Mongo(MongoConstants.MONGO_SERVER, MongoConstants.MONGO_PORT);
             DB db2 = mongo.getDB("cimapps");
-            DBCollection collection1 = db2.getCollection("strdocs3");
+           // DBCollection collection1 = db2.getCollection("strdocs3");
+            DBCollection collection1 = db2.getCollection("strdocs1");
             // for filling the response with data 
             Map<String, String> scrapeList = new HashMap<>();
             String STRNumber = null;
@@ -113,10 +123,10 @@ public class NewClass_multi extends HttpServlet {
             if (STRNumber.isEmpty()) {
                 //this is a new retrieval get data from MongoDB
                 //need to fix or reimport SNBPJR06260100521,SNPBVM07130100530
-                STRNumber = "SNPBWA07190100537";
+                STRNumber = "SNPBWA07190100537";  // SNPBGE03080000018 , SNPBWA07190100537
             } else {
                 //setup BSON formatted date for update
-                STRNumber = "SNPBWA07190100537";
+                STRNumber = "SNPBWA07190100537"; // SNPBWA07190100537
             }
             //BasicDBObject query = new BasicDBObject();
             //query.put("_id", new ObjectId(STRNumber));
@@ -173,9 +183,16 @@ public class NewClass_multi extends HttpServlet {
             Map<Object, Object> replys = new LinkedHashMap<>();
             Map<Object, Object> replys1 = new LinkedHashMap<>();
             //DBCursor cursor = collection1.find(whereQuery);
-
-            replys = collection1.findOne(whereQuery).toMap();
-            replys1 = collection1.findOne(whereQuery).toMap();
+            DBObject dbObject = collection1.findOne(whereQuery);
+            if (dbObject != null){
+            	replys = collection1.findOne(whereQuery).toMap();
+            	replys1 = collection1.findOne(whereQuery).toMap();
+            } else {
+            	// Document  not fond in  Databse ; Should return an error;
+            	RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+                rd.forward(request, response);
+                return;
+            }
 
             List<String> updatedBy = new ArrayList<>();
             List<String> revisions = new ArrayList<>();
@@ -198,72 +215,12 @@ public class NewClass_multi extends HttpServlet {
 
                     //Logger.getLogger(NewClass_multi.class.getName()).log(Level.INFO, revisions.get(0));
                 }
-                if ("SCMRecord".equals(key.toString()) || "STR_INSTRUCTION".equals(key.toString()) || "Attachments".equals(key.toString()) || "Attachments_1".equals(key.toString()) || "PostCompletionComments".equals(key.toString())) {
-                    Object value1 = value;
-                    //String content = STRNumber + "-" + key.toString(); //
-                    String content;
-                    if (value != null && value.toString() != "") {
-
-                        //PARSE OUT THE ATTACHMENT NAMES
-                        //format in 5 richtext areas is ["filename0.ext", ... "filenameX.ext"] and point to strNumber-section-0.ext , ...strNumber-section-X.ext in GRIDFS
-                        String valueString = value.toString();
-                        String fullFile = "";
-                        Integer a = valueString.indexOf("[ \"");
-                        Integer b = valueString.indexOf("\"]");
-                        Integer counter1 = 0;
-                        Integer endIndex = b;
-                        List<String> contentList = new ArrayList<>();
-                        if (a > -1 && b > a) {
-                            fullFile = valueString.substring(a + 3, endIndex).trim();
-                            Integer dot = fullFile.indexOf(".");
-                            String extension = "";
-                            if (dot > -1) {
-                                extension = fullFile.substring(dot);
-                            }
-                            Logger.getLogger(NewClass_multi.class.getName()).log(Level.INFO, "*******inside array***********");
-                            Integer nextComma = valueString.indexOf(",", a);
-                            if (nextComma < 1 || nextComma > b) {
-                                //parse the extension of the filename
-
-                                content = "<a href=" + "/STRform_woutMaven/GetEmbeddedObjs?content=" + STRNumber + "-" + key.toString() + "-" + counter1.toString() + extension + ">" + valueString.substring(a + 3, endIndex).trim() + "</a>";
-                                contentList.add(content);
-                                //Logger.getLogger(NewClass_multi.class.getName()).log(Level.INFO, "******************content=" + content);
-                            } else {
-                                //there are embedded files to parse and create Href links on
-                                content = "<a href=" + "/STRform_woutMaven/GetEmbeddedObjs?content=" + STRNumber + "-" + key.toString() + "-" + counter1.toString() + extension + ">" + valueString.substring(a + 3, endIndex).trim() + "</a>";
-                                contentList.add(content);
-                                while (nextComma < b && nextComma > 0) {
-                                    //endIndex = nextComma;
-                                    //fileNames.add(valueString.substring(a + 2, endIndex - 1));
-                                    a = nextComma + 1;
-                                    if (valueString.indexOf(",", a) < b) {
-                                        nextComma = valueString.indexOf(",", a);
-                                    } else {
-                                        nextComma = b;
-                                    }
-                                    fullFile = valueString.substring(a, nextComma).trim();
-                                    dot = fullFile.indexOf(".");
-                                    
-                                    if (dot > -1) {
-                                        extension = fullFile.substring(dot);
-                                    }
-                                    content = "<a href=" + "/STRform_woutMaven/GetEmbeddedObjs?content=" + STRNumber + "-" + key.toString() + "-" + counter1.toString() + ">" + valueString.substring(a, nextComma).trim() + "</a>";
-                                    contentList.add(content);
-                                    counter1 += 1;
-                                }
-                            }
-                            //String filename1 = valueString.substring(a + 2, endIndex - 1);
-                            String listString = String.join(" ", contentList);
-                            //remove the array portion of the value 
-                            value = valueString.substring(0 , a ) + valueString.substring(b + 2);
-                            value = value + listString;
-                        }
-                      
-                    }
-
-                    // Logger.getLogger(STRsave.class.getName()).info(  "return from getEmbeddedObject string " + STRNumber + "-" + key.toString() + "=" +  content);
-                    //  Logger.getLogger(STRsave.class.getName()).info(  "embedded value= " + STRNumber + "-" + key.toString() + "=" +  value);
-                    replys.put(key, value);
+                if ("SCMRecord".equals(key.toString()) || "STR_INSTRUCTION".equals(key.toString()) || "Attachments".equals(key.toString()) 
+                		|| "Attachments_1".equals(key.toString()) || "PostCompletionComments".equals(key.toString())) {
+                	/** Old Code to handle RichText Area Fields */
+					//processRichtextDataFields(STRNumber, replys, key, value);
+                	/**New Code to Handle RichText Area Fields*/
+                	handleRichTextDataFields(STRNumber, replys, key, value);
                 }
                 if (value.toString().contains("\r\n") && !value.toString().contains("<br />\r\n") && !value.toString().contains("<br>") && !"UpdatedBy".equals(key.toString()) && !"Revisions".equals(key.toString())) {
                     //value =value.toString().replace("\n\r", "<br />");
@@ -308,6 +265,143 @@ public class NewClass_multi extends HttpServlet {
         //response.sendRedirect("index.jsp");
     }
 
+    
+    /**
+     * @author kudaraa
+     */
+	private void handleRichTextDataFields(String sTRNumber, Map<Object, Object> replys, Object key, Object value) {
+		String textVal = processRichTextJSONString(key,value);
+		replys.put(key, textVal);
+		
+		
+	}
+
+	private String processRichTextJSONString(Object key, Object value) {
+		StringBuilder textValue = new StringBuilder();
+		Gson gson = new Gson();
+		JsonParser parser = new JsonParser();
+		try{
+			JsonElement parseElement = parser.parse(value.toString());
+			if (parseElement.isNull()){
+				textValue.append("");
+			} else if (parseElement.isArray()){
+				JsonArray jArray = parser.parse(value.toString()).asArray();
+				for(JsonElement attachmentName : jArray )
+				{
+					String attachmentFileName = gson.fromJson( attachmentName , String.class);
+					buildEmeddedPbjectDownloadURL(textValue, attachmentFileName);
+				}
+			} else if (parseElement.isObject()){
+				
+				RichTextFieldVo richTextFieldVo = gson.fromJson(value.toString(), RichTextFieldVo.class);
+				if (richTextFieldVo.getTextValue()!= null ){
+					textValue.append(richTextFieldVo.getTextValue());
+				} 
+				if (richTextFieldVo.getImageFiles() != null && richTextFieldVo.getImageFiles().size() > 0){
+					for (String imgeFile : richTextFieldVo.getImageFiles()) {
+						buildEmeddedPbjectDownloadURL(textValue,imgeFile);
+					}
+				} 
+				if (richTextFieldVo.getAttachementFiles() != null && richTextFieldVo.getAttachementFiles().size() > 0){
+					List<String> attachementFiles = richTextFieldVo.getAttachementFiles();
+					for (String fileName : attachementFiles) {
+						buildEmeddedPbjectDownloadURL(textValue, fileName);
+					}
+				}
+				if (StringUtils.isNotBlank(richTextFieldVo.getSCMRecord())){
+					textValue.append(richTextFieldVo.getSCMRecord());
+				}
+				if (StringUtils.isNotBlank(richTextFieldVo.getPostCompletionComments())){
+					textValue.append(richTextFieldVo.getPostCompletionComments());
+				}
+				
+			} else {
+				textValue.append(value.toString());
+			}
+			
+		}catch(JsonSyntaxException e){
+			textValue.append(value.toString());
+		}
+				
+		return textValue.toString();
+	}
+
+
+	private void buildEmeddedPbjectDownloadURL(StringBuilder textValue, String fileName) {
+		textValue.append("<a href=\"STRFORMWithoutMaven\\GetEmbeddedObjs?fileName="+fileName+"\">"+fileName+"</a>");
+		textValue.append("<br/>");
+		
+	}
+
+
+	private void processRichtextDataFields(String STRNumber, Map<Object, Object> replys, Object key, Object value) {
+		Object value1 = value;
+		//String content = STRNumber + "-" + key.toString(); //
+		String content;
+		if (value != null && value.toString() != "") {
+
+		    //PARSE OUT THE ATTACHMENT NAMES
+		    //format in 5 richtext areas is ["filename0.ext", ... "filenameX.ext"] and point to strNumber-section-0.ext , ...strNumber-section-X.ext in GRIDFS
+		    String valueString = value.toString();
+		    String fullFile = "";
+		    Integer a = valueString.indexOf("[ \"");
+		    Integer b = valueString.indexOf("\"]");
+		    Integer counter1 = 0;
+		    Integer endIndex = b;
+		    List<String> contentList = new ArrayList<>();
+		    if (a > -1 && b > a) {
+		        fullFile = valueString.substring(a + 3, endIndex).trim();
+		        Integer dot = fullFile.indexOf(".");
+		        String extension = "";
+		        if (dot > -1) {
+		            extension = fullFile.substring(dot);
+		        }
+		        Logger.getLogger(NewClass_multi.class.getName()).log(Level.INFO, "*******inside array***********");
+		        Integer nextComma = valueString.indexOf(",", a);
+		        if (nextComma < 1 || nextComma > b) {
+		            //parse the extension of the filename
+
+		            content = "<a href=" + "/STRform_woutMaven/GetEmbeddedObjs?content=" + STRNumber + "-" + key.toString() + "-" + counter1.toString() + extension + ">" + valueString.substring(a + 3, endIndex).trim() + "</a>";
+		            contentList.add(content);
+		            //Logger.getLogger(NewClass_multi.class.getName()).log(Level.INFO, "******************content=" + content);
+		        } else {
+		            //there are embedded files to parse and create Href links on
+		            content = "<a href=" + "/STRform_woutMaven/GetEmbeddedObjs?content=" + STRNumber + "-" + key.toString() + "-" + counter1.toString() + extension + ">" + valueString.substring(a + 3, endIndex).trim() + "</a>";
+		            contentList.add(content);
+		            while (nextComma < b && nextComma > 0) {
+		                //endIndex = nextComma;
+		                //fileNames.add(valueString.substring(a + 2, endIndex - 1));
+		                a = nextComma + 1;
+		                if (valueString.indexOf(",", a) < b) {
+		                    nextComma = valueString.indexOf(",", a);
+		                } else {
+		                    nextComma = b;
+		                }
+		                fullFile = valueString.substring(a, nextComma).trim();
+		                dot = fullFile.indexOf(".");
+		                
+		                if (dot > -1) {
+		                    extension = fullFile.substring(dot);
+		                }
+		                content = "<a href=" + "/STRform_woutMaven/GetEmbeddedObjs?content=" + STRNumber + "-" + key.toString() + "-" + counter1.toString() + ">" + valueString.substring(a, nextComma).trim() + "</a>";
+		                contentList.add(content);
+		                counter1 += 1;
+		            }
+		        }
+		        //String filename1 = valueString.substring(a + 2, endIndex - 1);
+		        String listString = String.join(" ", contentList);
+		        //remove the array portion of the value 
+		        value = valueString.substring(0 , a ) + valueString.substring(b + 2);
+		        value = value + listString;
+		    }
+		  
+		}
+
+		// Logger.getLogger(STRsave.class.getName()).info(  "return from getEmbeddedObject string " + STRNumber + "-" + key.toString() + "=" +  content);
+		//  Logger.getLogger(STRsave.class.getName()).info(  "embedded value= " + STRNumber + "-" + key.toString() + "=" +  value);
+		replys.put(key, value);
+	}
+
     private static synchronized String getEmbeddedObject(String section, String str_number, Mongo mongo) throws UnsupportedEncodingException, IOException {
         //try {
         //Mongo mongo = new Mongo(MongoConstants.MONGO_SERVER, MongoConstants.MONGO_PORT);
@@ -345,6 +439,7 @@ public class NewClass_multi extends HttpServlet {
     }
 
     private static synchronized String saveEmbeddedObject(String section, String str_number, Mongo mongo, String content) {
+
         //try {
         DB db1 = mongo.getDB("cimapps");
         StringBuilder ObjName = new StringBuilder();
@@ -375,4 +470,5 @@ public class NewClass_multi extends HttpServlet {
 //    }
         return in.getId().toString();
     }
+    
 }

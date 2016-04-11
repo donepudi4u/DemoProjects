@@ -6,7 +6,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/dk.jarry.plugin.domino.osgi.domjson_1.0.0.201110122133.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mongo-java-driver-2.3-javadoc.jar"/>
@@ -79,5 +78,6 @@
 	<classpathentry kind="lib" path="C:/apache-tomcat-8.0.30/lib/int/rtd.jar"/>
 	<classpathentry kind="lib" path="C:/apache-tomcat-8.0.30/lib/int/semicomm.jar"/>
 	<classpathentry kind="lib" path="C:/apache-tomcat-8.0.30/lib/int/semicommext.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
