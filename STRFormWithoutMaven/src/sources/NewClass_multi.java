@@ -208,14 +208,14 @@ public class NewClass_multi extends HttpServlet {
                     updatedBy = (List<String>) value;
 
                 }
-                if ("Revisions".equals(key.toString())) {
+                else if ("Revisions".equals(key.toString())) {
                     // if (value.toString().contains(",")){
                     revisions = (List<String>) value;
                    // }
 
                     //Logger.getLogger(NewClass_multi.class.getName()).log(Level.INFO, revisions.get(0));
                 }
-                if ("SCMRecord".equals(key.toString()) || "STR_INSTRUCTION".equals(key.toString()) || "Attachments".equals(key.toString()) 
+                else  if ("SCMRecord".equals(key.toString()) || "STR_INSTRUCTION".equals(key.toString()) || "Attachments".equals(key.toString()) 
                 		|| "Attachments_1".equals(key.toString()) || "PostCompletionComments".equals(key.toString())) {
                 	/** Old Code to handle RichText Area Fields */
 					//processRichtextDataFields(STRNumber, replys, key, value);
@@ -316,7 +316,12 @@ public class NewClass_multi extends HttpServlet {
 				}
 				
 			} else {
-				textValue.append(value.toString());
+				if (StringUtils.equalsIgnoreCase(key.toString(), "Attachments")){
+					// Attachments has only one attachment file
+					buildEmeddedPbjectDownloadURL(textValue, value.toString());
+				} else {
+					textValue.append(value.toString());
+				}
 			}
 			
 		}catch(JsonSyntaxException e){
@@ -328,7 +333,7 @@ public class NewClass_multi extends HttpServlet {
 
 
 	private void buildEmeddedPbjectDownloadURL(StringBuilder textValue, String fileName) {
-		textValue.append("<a href=\"STRFORMWithoutMaven\\GetEmbeddedObjs?fileName="+fileName+"\">"+fileName+"</a>");
+		textValue.append("<a href=\"GetEmbeddedObjs?fileName="+fileName+"\">"+fileName+"</a>");
 		textValue.append("<br/>");
 		
 	}

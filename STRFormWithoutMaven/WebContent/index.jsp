@@ -697,7 +697,7 @@ $(function() {
               
 <!--             <form class= "STRform" id="STRform" action="#"  >    -->
             <div id="container">
-                <div><b>${mongodb}</b></div>
+           <!--       <div><b>${mongodb}</b></div>-->  <!-- For Debugging purpose . Enable this if you want to see the json value -->
 <!--                <i class="str-info">Click on a entry to change.</i><i class="str-updated">(Last Refresh: <span id="str_updated">Never</span>)</i>-->
                 <TABLE class= "STRtable"id="STRtable1" BORDER="2" CELLPADDING="2" CELLSPACING="2" >
                      <TR>
@@ -994,7 +994,7 @@ $(function() {
             <br>
            <p id="strreportattachment"><b>STR Report Attachment:</b></p>
             <p id="strreportattachment2">Attach STR Report.</p>
-           <p><div id="Attachments" name="Attachments"  id="Attachments" class="strinstructions" contenteditable="true" style="width: 670px;height: 100px;overflow: auto;border: 1px solid black">${replys.get("Attachments")}</div></p>
+           <p><div id="Attachments" name="Attachments" >${replys.get("Attachments")}</div></p>
            <br>
           <p id="poststrattachment"><b>Post Completion Comments:</b></p>
             <p id="poststrattachment2">Comments to be added after a STR has completed.</p>

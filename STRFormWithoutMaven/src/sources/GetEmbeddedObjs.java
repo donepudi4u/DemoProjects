@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,18 +40,9 @@ public class GetEmbeddedObjs extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
-    	PrintWriter writer = response.getWriter();
-    	writer.write("In Get Method");
-    	
-    	//List<FileItem> items;
-
-        // items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request); //content coming from client
         Mongo mongo = new Mongo(MongoConstants.MONGO_SERVER, MongoConstants.MONGO_PORT);
         DB db1 = mongo.getDB("cimapps");
-        //DBCollection collection1 = db1.getCollection("strdocs3");
-        // for filling the response with data 
-        //Map<String, String> scrapeList = new HashMap<>();
-        String embeddedFile = request.getParameter("content");
+        String embeddedFile = "SNPBWA07190100537-Attachments.doc";//request.getParameter("fileName");
         if (embeddedFile == null || embeddedFile.equals("")) {
             //throw new ServletException("File Name can't be null or empty");
            // Logger.getLogger(GetEmbeddedObjs.class.getName()).warning("File Name can't be null or empty");
@@ -59,43 +51,19 @@ public class GetEmbeddedObjs extends HttpServlet {
             StringBuilder ObjName = new StringBuilder();
             ObjName.append(embeddedFile);
 
-            GridFS gfscimapps = new GridFS(db1, "cimappsSTR");
+            GridFS gfscimapps = new GridFS(db1, "cimappsSTR1");
             BasicDBObject query = new BasicDBObject("filename", ObjName.toString());
             GridFSDBFile imageForOutput = gfscimapps.findOne(query);
-            // Logger.getLogger(STRsave.class.getName()).info(  "***************query into GRIDFS*********" + query  );
-            //String totalLine = "";
             if (imageForOutput != null) {
-            //Logger.getLogger(STRsave.class.getName()).info("***************inside getEmbeddedObjs image for output was found in GRIDFS*********" + imageForOutput);
-                //InputStream stream = imageForOutput.getInputStream();
-                //BufferedReader br;
-                // br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-
-                //String line = null;
-                response.setContentType("application");
+            	response.setContentType("application/octet-stream");
                 response.setHeader("Content-disposition", "attachment; filename=" + embeddedFile);
-            //response.sendRedirect("index.jsp");
-                // This should send the file to browser
-                OutputStream out = response.getOutputStream();
-                imageForOutput.writeTo(out);
-
-                //out.flush();
-                out.close();
-
+                ServletOutputStream os       = response.getOutputStream();
+                imageForOutput.writeTo(os);
+                System.out.println("File downloaded at client successfully");
+                
             }
         }
         mongo.close();
-        writer.write("No issues");
-        writer.close();
         
     }
-    
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-    	PrintWriter writer = response.getWriter();
-    	writer.write("In Post Method");
-    	writer.close();
-    }
-    
-    
 }
