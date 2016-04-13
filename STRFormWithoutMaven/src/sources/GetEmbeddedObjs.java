@@ -6,8 +6,6 @@
 package sources;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -42,7 +40,7 @@ public class GetEmbeddedObjs extends HttpServlet {
     	
         Mongo mongo = new Mongo(MongoConstants.MONGO_SERVER, MongoConstants.MONGO_PORT);
         DB db1 = mongo.getDB("cimapps");
-        String embeddedFile = "SNPBWA07190100537-Attachments.doc";//request.getParameter("fileName");
+        String embeddedFile = request.getParameter("fileName"); //request.getParameter("fileName"); // "SNPBWA07190100537-Attachments.doc";//
         if (embeddedFile == null || embeddedFile.equals("")) {
             //throw new ServletException("File Name can't be null or empty");
            // Logger.getLogger(GetEmbeddedObjs.class.getName()).warning("File Name can't be null or empty");

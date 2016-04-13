@@ -902,6 +902,8 @@ $(function() {
         %>
            </ul> 
           <br>
+          <div class="strinstructions" id="STR_INSTRUCTION_Images" name="STR_INSTRUCTION_images" >${replys1.get("STR_INSTRUCTION_imageFiles")}</div>
+          <div class="strinstructions" id="STR_INSTRUCTION_ATTACHMENTS" name="STR_INSTRUCTION_ATTACHMENTS" >${replys1.get("STR_INSTRUCTION_attachments")}</div>
             <p><b>Success Criteria:</b></p>
             <TABLE class= "STRtable" id="STRtable6" BORDER="2" CELLPADDING="2" CELLSPACING="2" >
                       <th style="width:870px" >What is the success criteria (null and alternative hypothesis) STR results must meet to move to the next stage</th>
@@ -994,7 +996,8 @@ $(function() {
             <br>
            <p id="strreportattachment"><b>STR Report Attachment:</b></p>
             <p id="strreportattachment2">Attach STR Report.</p>
-           <p><div id="Attachments" name="Attachments" >${replys.get("Attachments")}</div></p>
+             
+           <p><div id="Attachments" name="Attachments" >${replys1.get("Attachments_attachments")}</div></p>
            <br>
           <p id="poststrattachment"><b>Post Completion Comments:</b></p>
             <p id="poststrattachment2">Comments to be added after a STR has completed.</p>
@@ -1021,7 +1024,9 @@ $(function() {
             <TD  colspan="5" style="width:630px" ><input id="Rel1Comment" name="Rel1Comment"  style="display:table-cell; width:100%;" type='text' value='${replys.get("Rel1Comment")}' readonly="true"></TD>
              </TR>
             </table>
-            <p>Attach Reliability Report:<div id="Attachments_1" name="Attachments_1"  contenteditable="true" style="width: 670px;height: 100px;overflow: auto;border: 1px solid black">${replys.get("Attachments_1")}</div></p>   
+            <p>Attach Reliability Report:<div id="Attachments_1" name="Attachments_1"  contenteditable="true" style="width: 670px;height: 100px;overflow: auto;border: 1px solid black">${replys.get("Attachments_1")}</div></p>
+			<div id="Attachments_1_atachments" name="Attachments_1_atachments" >${replys1.get("Attachments_1_attachments")}</div>
+			<div id="Attachments_1_images" name="Attachments_1_images" >${replys1.get("Attachments_1_imageFiles")}</div></p>               
             <TABLE class= "STRtable1" id="STRtable11b" BORDER="2" CELLPADDING="2" CELLSPACING="2" >
             <TR>
             <TD style="width:100px"  bgcolor="lightgray">For Delivery to Customer</TD>

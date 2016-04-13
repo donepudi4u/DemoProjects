@@ -123,10 +123,10 @@ public class NewClass_multi extends HttpServlet {
             if (STRNumber.isEmpty()) {
                 //this is a new retrieval get data from MongoDB
                 //need to fix or reimport SNBPJR06260100521,SNPBVM07130100530
-                STRNumber = "SNPBWA07190100537";  // SNPBGE03080000018 , SNPBWA07190100537
+                STRNumber = "SNPBSK02211603803";  // SNPBGE03080000018 , SNPBWA07190100537
             } else {
                 //setup BSON formatted date for update
-                STRNumber = "SNPBWA07190100537"; // SNPBWA07190100537
+                STRNumber = "SNPBSK02211603803"; // SNPBWA07190100537
             }
             //BasicDBObject query = new BasicDBObject();
             //query.put("_id", new ObjectId(STRNumber));
@@ -220,7 +220,7 @@ public class NewClass_multi extends HttpServlet {
                 	/** Old Code to handle RichText Area Fields */
 					//processRichtextDataFields(STRNumber, replys, key, value);
                 	/**New Code to Handle RichText Area Fields*/
-                	handleRichTextDataFields(STRNumber, replys, key, value);
+                	handleRichTextDataFields(STRNumber, replys,replys1, key, value);
                 }
                 if (value.toString().contains("\r\n") && !value.toString().contains("<br />\r\n") && !value.toString().contains("<br>") && !"UpdatedBy".equals(key.toString()) && !"Revisions".equals(key.toString())) {
                     //value =value.toString().replace("\n\r", "<br />");
@@ -228,7 +228,7 @@ public class NewClass_multi extends HttpServlet {
                     replys.put(key, value);
                     replys1.put(key, value);
                 }
-                if (value.toString().startsWith("[") && value.toString().endsWith("]") && !"UpdatedBy".equals(key.toString()) && !"Revisions".equals(key.toString())) {
+                if (value.toString().startsWith("[") && value.toString().endsWith("]") && !"UpdatedBy".equals(key.toString()) && !"Revisions".equals(key.toString()) && !"Attachments".equals(key.toString()) && !"Attachments_1".equals(key.toString())) {
                     String value2 = value.toString().replace("[", "").replace("]", "").replace(",", " ").replace("\"", "");
                     replys.put(key, value2);
 
@@ -253,6 +253,7 @@ public class NewClass_multi extends HttpServlet {
 
             request.setAttribute("mongodb", replys);
             request.setAttribute("replys", replys);
+            request.setAttribute("replys1", replys1);
             mongo.close();
         } catch (FileUploadException e) {
             //throw new ServletException("Cannot parse multipart request.", e);
@@ -269,14 +270,14 @@ public class NewClass_multi extends HttpServlet {
     /**
      * @author kudaraa
      */
-	private void handleRichTextDataFields(String sTRNumber, Map<Object, Object> replys, Object key, Object value) {
-		String textVal = processRichTextJSONString(key,value);
+	private void handleRichTextDataFields(String sTRNumber, Map<Object, Object> replys, Map<Object, Object> replys1,Object key, Object value) {
+		String textVal = processRichTextJSONString(key,value,replys1);
 		replys.put(key, textVal);
 		
 		
 	}
 
-	private String processRichTextJSONString(Object key, Object value) {
+	private String processRichTextJSONString(Object key, Object value, Map<Object, Object> replys1) {
 		StringBuilder textValue = new StringBuilder();
 		Gson gson = new Gson();
 		JsonParser parser = new JsonParser();
@@ -285,12 +286,14 @@ public class NewClass_multi extends HttpServlet {
 			if (parseElement.isNull()){
 				textValue.append("");
 			} else if (parseElement.isArray()){
+				StringBuilder attachmentsURL = new StringBuilder();
 				JsonArray jArray = parser.parse(value.toString()).asArray();
 				for(JsonElement attachmentName : jArray )
 				{
 					String attachmentFileName = gson.fromJson( attachmentName , String.class);
-					buildEmeddedPbjectDownloadURL(textValue, attachmentFileName);
+					buildEmeddedPbjectDownloadURL(attachmentsURL, attachmentFileName);
 				}
+				replys1.put(key+"_attachments", attachmentsURL);
 			} else if (parseElement.isObject()){
 				
 				RichTextFieldVo richTextFieldVo = gson.fromJson(value.toString(), RichTextFieldVo.class);
@@ -298,15 +301,19 @@ public class NewClass_multi extends HttpServlet {
 					textValue.append(richTextFieldVo.getTextValue());
 				} 
 				if (richTextFieldVo.getImageFiles() != null && richTextFieldVo.getImageFiles().size() > 0){
+					StringBuilder imageFileURLs = new StringBuilder();
 					for (String imgeFile : richTextFieldVo.getImageFiles()) {
-						buildEmeddedPbjectDownloadURL(textValue,imgeFile);
+						buildEmeddedPbjectDownloadURL(imageFileURLs,imgeFile);
 					}
+					replys1.put(key+"_imageFiles", imageFileURLs);
 				} 
 				if (richTextFieldVo.getAttachementFiles() != null && richTextFieldVo.getAttachementFiles().size() > 0){
+					StringBuilder attachmentsURL = new StringBuilder();
 					List<String> attachementFiles = richTextFieldVo.getAttachementFiles();
 					for (String fileName : attachementFiles) {
-						buildEmeddedPbjectDownloadURL(textValue, fileName);
+						buildEmeddedPbjectDownloadURL(attachmentsURL, fileName);
 					}
+					replys1.put(key+"_attachments", attachmentsURL);
 				}
 				if (StringUtils.isNotBlank(richTextFieldVo.getSCMRecord())){
 					textValue.append(richTextFieldVo.getSCMRecord());
@@ -316,9 +323,11 @@ public class NewClass_multi extends HttpServlet {
 				}
 				
 			} else {
-				if (StringUtils.equalsIgnoreCase(key.toString(), "Attachments")){
+				if (StringUtils.equalsIgnoreCase(key.toString(), "Attachments") || StringUtils.equalsIgnoreCase(key.toString(), "Attachments_1")){
+					StringBuilder attachmentsURL = new StringBuilder();
 					// Attachments has only one attachment file
-					buildEmeddedPbjectDownloadURL(textValue, value.toString());
+					buildEmeddedPbjectDownloadURL(attachmentsURL, value.toString());
+					replys1.put(key+"_attachments", attachmentsURL);
 				} else {
 					textValue.append(value.toString());
 				}
