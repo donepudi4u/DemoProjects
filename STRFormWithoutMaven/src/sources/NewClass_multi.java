@@ -123,10 +123,10 @@ public class NewClass_multi extends HttpServlet {
             if (STRNumber.isEmpty()) {
                 //this is a new retrieval get data from MongoDB
                 //need to fix or reimport SNBPJR06260100521,SNPBVM07130100530
-                STRNumber = "SNPBSK02211603803";  // SNPBGE03080000018 , SNPBWA07190100537
+                STRNumber = "SNPBAJ11290100766";  // SNPBGE03080000018 , SNPBWA07190100537 , problem with # SNPBAJ11290100766, SNPBYK04150200934, SNPBPH04060000035
             } else {
                 //setup BSON formatted date for update
-                STRNumber = "SNPBSK02211603803"; // SNPBWA07190100537
+                STRNumber = "SNPBAJ11290100766"; // SNPBWA07190100537
             }
             //BasicDBObject query = new BasicDBObject();
             //query.put("_id", new ObjectId(STRNumber));
