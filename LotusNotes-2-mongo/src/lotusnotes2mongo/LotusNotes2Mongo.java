@@ -10,6 +10,7 @@ package lotusnotes2mongo;
  * @author whitnem
  */
 import com.jazz.common.utils.LotusUtils;
+import com.jazz.lotusnotes.richText.procesessor.RichTextProcessor;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -108,7 +109,8 @@ public class LotusNotes2Mongo {
                             //System.out.println("the str_number in this doc is blank - it is being bypassed. blank counter = " + blank_counter);
                         } else if (isVallidSTRNumber(str_number)) {
                             System.out.println("STR Number : " + str_number);
-                            Map<String, List<String>> imagesFilesMap = processImagesINDocument(doc, session, db2, str_number);
+                        //    Map<String, List<String>> imagesFilesMap = processImagesINDocument(doc, session, db2, str_number);
+                            Map<String, String> richTextData = RichTextProcessor.processRichTextData(db2, session,doc, str_number);
                             db1.setLength(0);
                             if (doc.hasEmbedded()) {
                                 //there are embedded objects in this doc at the document level
@@ -131,65 +133,12 @@ public class LotusNotes2Mongo {
                                 item = it.next();
                                 attNames.clear();
                                 String iname = item.getName(); //this is the name of the field in the doc designer form
-                                if (iname.contains("STR_INSTRUCTION")) {
-                                    String iname1 = iname;
-                                    //String ivalue =  item.getValueString();
-                                    //System.out.println(" ivalue =" + ivalue);
-                                }
                                 if (item.getType() == Item.RICHTEXT) {
-                                    RichTextItem riItem = (RichTextItem) item;
-                                    Vector embv = riItem.getEmbeddedObjects(); //lotus notes embedded objects wont pass into arraylists directly
-                                    ArrayList<?> emb = new ArrayList<>(embv);
-                                    String path2 = "c:\\app\\";
-                                    String embName;
-                                    if (emb.size() > 0) {
-                                        //    int embeddedObjectSequence = 0;
-                                        for (Object emb1 : emb) {
-                                            EmbeddedObject embObj = (EmbeddedObject) emb1;
-//                                        if(embObj.getName().contains("\"")){
-//                                            int embLastIndex = embObj.getName().lastIndexOf("\"");
-//                                            embName =embObj.getName().substring(embLastIndex + 1);
-//                                        }else{
-//                                            embName =embObj.getName();
-//                                        }
-                                            if (!attNames.contains(embObj.getName())) { //&& !embObj.getSource().contains("notes071343\2F2E6A04.TMP")) {
-
-                                                if (embObj.getSource().contains(".") && embObj.getFileSize() > 0) {
-                                                    StringBuilder embeddedObjectFileName = buildAttachemntName(embObj, str_number, item);
-                                                    String path = "c:\\app\\" + embObj.getSource();
-                                                    //attNames.add(embObj.getName());
-                                                    attNames.add(embeddedObjectFileName.toString());
-
-                                                    //**must test to see if the embedded object is a file that can be extracted
-                                                    if ("SNPBYA03191203049".equals(str_number) && embObj.getSource().contains(".JRP") || "SNPBYA04271203069".equals(str_number)) {
-                                                        // bypassing these chart files - at least one is corrupt and cannot be extracted - lotus notes Checksum error
-                                                        //looking at the STR in Lotus notes shows the files are NOT exported in the same order as they appear so finding out
-                                                        //which file(s) is the culpret would require multiple iterations and Lotus Notes does not have a catch for the exception
-                                                    } else {
-                                                        embObj.extractFile(path);
-                                                        //** add embedded object to GridFS and then delete the temp file
-                                                        saveEmbeddedObject(db2, path, embeddedObjectFileName.toString());
-                                                        //saveEmbeddedObject(item,   str_number, mongo, embObj , path); // is only saving the last embedded object in GridFS 
-                                                        //** add embedded object to GridFS and then delete the temp file
-                                                        //saveEmbeddedObject(item, embObj, path, str_number, mongo); // is only saving the last embedded object in GridFS 
-                                                    }
-
-                                                } else {
-
-                                                }
-                                            }
-                                            //** add embedded object to GridFS and then delete the temp file
-                                            //           saveEmbeddedObject(item,   str_number, mongo, embObj , path); // is only saving the last embedded object in GridFS 
-                                        }
-
-                                    }
-                                    // save all embedded objects into a single GridFS 
-                                    // Item item, String str_number,Mongo mongo, ArrayList emb, HashSet attNames, String path
-                                    //saveEmbeddedObjectGroup(item,   str_number, mongo,  attNames, path2); //
-                                    //remove all files from c:\\app\\ folder
-
+                                    processRichTextDataFromLotusNotesDocument(db2, attNames, item, str_number);
+                                	//RichTextProcessor.processRichTextData(db2, attNames, item, str_number);
+                                	//RichTextProcessor.processRichTextData(db2, session,doc, str_number);
                                 }
-                                printJsonItem(db1, session, item, firstItem, attNames, imagesFilesMap);
+                                printJsonItem(db1, session, item, firstItem, attNames, null);
 
                                 if (item != null) {
                                     item.recycle();
@@ -235,6 +184,59 @@ public class LotusNotes2Mongo {
 
         }
     }
+
+	private static void processRichTextDataFromLotusNotesDocument(DB db2, HashSet<String> attNames, Item item,String str_number) throws NotesException {
+		RichTextItem riItem = (RichTextItem) item;
+		Vector embv = riItem.getEmbeddedObjects(); //lotus notes embedded objects wont pass into arraylists directly
+		ArrayList<?> emb = new ArrayList<>(embv);
+		String path2 = "c:\\app\\";
+		String embName;
+		if (emb.size() > 0) {
+		    //    int embeddedObjectSequence = 0;
+		    for (Object emb1 : emb) {
+		        EmbeddedObject embObj = (EmbeddedObject) emb1;
+//                                        if(embObj.getName().contains("\"")){
+//                                            int embLastIndex = embObj.getName().lastIndexOf("\"");
+//                                            embName =embObj.getName().substring(embLastIndex + 1);
+//                                        }else{
+//                                            embName =embObj.getName();
+//                                        }
+		        if (!attNames.contains(embObj.getName())) { //&& !embObj.getSource().contains("notes071343\2F2E6A04.TMP")) {
+
+		            if (embObj.getSource().contains(".") && embObj.getFileSize() > 0) {
+		                StringBuilder embeddedObjectFileName = buildAttachemntName(embObj, str_number, item);
+		                String path = "c:\\app\\" + embObj.getSource();
+		                //attNames.add(embObj.getName());
+		                attNames.add(embeddedObjectFileName.toString());
+
+		                //**must test to see if the embedded object is a file that can be extracted
+		                if ("SNPBYA03191203049".equals(str_number) && embObj.getSource().contains(".JRP") || "SNPBYA04271203069".equals(str_number)) {
+		                    // bypassing these chart files - at least one is corrupt and cannot be extracted - lotus notes Checksum error
+		                    //looking at the STR in Lotus notes shows the files are NOT exported in the same order as they appear so finding out
+		                    //which file(s) is the culpret would require multiple iterations and Lotus Notes does not have a catch for the exception
+		                } else {
+		                    embObj.extractFile(path);
+		                    //** add embedded object to GridFS and then delete the temp file
+		                    saveEmbeddedObject(db2, path, embeddedObjectFileName.toString());
+		                    //saveEmbeddedObject(item,   str_number, mongo, embObj , path); // is only saving the last embedded object in GridFS 
+		                    //** add embedded object to GridFS and then delete the temp file
+		                    //saveEmbeddedObject(item, embObj, path, str_number, mongo); // is only saving the last embedded object in GridFS 
+		                }
+
+		            } else {
+
+		            }
+		        }
+		        //** add embedded object to GridFS and then delete the temp file
+		        //           saveEmbeddedObject(item,   str_number, mongo, embObj , path); // is only saving the last embedded object in GridFS 
+		    }
+
+		}
+		// save all embedded objects into a single GridFS 
+		// Item item, String str_number,Mongo mongo, ArrayList emb, HashSet attNames, String path
+		//saveEmbeddedObjectGroup(item,   str_number, mongo,  attNames, path2); //
+		//remove all files from c:\\app\\ folder
+	}
 
     private static StringBuilder buildAttachemntName(EmbeddedObject embObj, String str_number, Item item) throws NotesException {
         StringBuilder embeddedObjectFileName = new StringBuilder();
@@ -508,10 +510,6 @@ public class LotusNotes2Mongo {
             DxlExporter dxlExporter = session.createDxlExporter();
             dxlExporter.setConvertNotesBitmapsToGIF(true);
             String documentXMLString = dxlExporter.exportDxl(document);
-            //  System.out.println("DXL Exporter" + documentXMLString);
-            // First Approch - XML
-            //String generateXML = document.generateXML();
-            // System.out.println("Generated XML Data" + generateXML);
             documentXMLString = LotusUtils.removeDTDInfoFromXML(documentXMLString);
             imageFileNamesMap = getImageData(documentXMLString, cimAPPSMongoDb, str_number);
             // Second Approch - HTML / WEb Page - login failure
@@ -714,7 +712,7 @@ public class LotusNotes2Mongo {
     }
 
     private static boolean isVallidSTRNumber(String str_number) {
-        return !str_number.isEmpty() && StringUtils.trim(str_number).equalsIgnoreCase("SNPBGP04010301083");//|| (StringUtils.trim(str_number).equalsIgnoreCase("SNPBGE03080000018")));SNPBSK02211603803, SNPBAJ11290100766, SNPBYK04150200934
+        return !str_number.isEmpty() && StringUtils.trim(str_number).equalsIgnoreCase("SNPBYK04150200934");//|| (StringUtils.trim(str_number).equalsIgnoreCase("SNPBGE03080000018")));SNPBSK02211603803, SNPBAJ11290100766, SNPBYK04150200934
     }
 
     private static void saveEmbeddedObjectGroup(Item item, String str_number, Mongo mongo, HashSet<String> attNames, String path2) {
