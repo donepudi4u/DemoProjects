@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,25 +29,58 @@ import org.xml.sax.SAXException;
 
 import com.jazz.common.utils.Commonutility;
 import com.jazz.common.utils.LotusUtils;
+import com.jazz.mongodb.impl.MongoDBDaoImpl;
 import com.mongodb.DB;
 
 import lotus.domino.DxlExporter;
+import lotus.domino.EmbeddedObject;
 import lotus.domino.Item;
 import lotus.domino.NotesException;
+import lotus.domino.RichTextItem;
 import lotus.domino.Session;
 
 public class RichTextProcessor {
-
+	private Session session;
+	private lotus.domino.Document document;
+	private String strNumber;
+	MongoDBDaoImpl daoImpl;
+	
+	public RichTextProcessor(DB cimAppsDB, Session session,lotus.domino.Document document,String strNumber){
+		daoImpl = new MongoDBDaoImpl(cimAppsDB);
+		this.session = session;
+		this.document = document;
+		this.strNumber = strNumber;
+		
+	}
+	public Session getSession() {
+		return session;
+	}
+	public void setSession(Session session) {
+		this.session = session;
+	}
+	public lotus.domino.Document getDocument() {
+		return document;
+	}
+	public void setDocument(lotus.domino.Document document) {
+		this.document = document;
+	}
+	public String getStrNumber() {
+		return strNumber;
+	}
+	public void setStrNumber(String strNumber) {
+		this.strNumber = strNumber;
+	}
+	
 	public static void processRichTextData(DB cimAppsDB, HashSet<String> attachmentNames, Item docItem, String strNumber) {
 		System.out.println("Process Rich Text Items Start");
 	}
 	
-	public static Map<String, String> processRichTextData(DB cimAppsDB, Session session,lotus.domino.Document document, String strNumber) {
+	public  Map<String, String> processRichTextData() {
 		System.out.println("Process Rich Text Items Start");
 		 Map<String, String> richtextDataMap =null;
 		try {
-			org.w3c.dom.Document documentDOM = getDocumentFromLotusDocument(session, document);
-             richtextDataMap = getNotesBitmapData(documentDOM, cimAppsDB, strNumber);
+			org.w3c.dom.Document documentDOM = getDocumentFromLotusDocument();
+             richtextDataMap = getRichTextDataAsMap(documentDOM);
 		} catch (NotesException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -59,12 +93,11 @@ public class RichTextProcessor {
 		return richtextDataMap;
 	}
 
-	private static org.w3c.dom.Document getDocumentFromLotusDocument(Session session, lotus.domino.Document document)
-			throws NotesException, ParserConfigurationException, SAXException, IOException {
+	private  org.w3c.dom.Document getDocumentFromLotusDocument()throws NotesException, ParserConfigurationException, SAXException, IOException {
 		DxlExporter dxlExporter;
-		dxlExporter = session.createDxlExporter();
+		dxlExporter = getSession().createDxlExporter();
 		dxlExporter.setConvertNotesBitmapsToGIF(true);
-		String documentHtmlStr = dxlExporter.exportDxl(document);
+		String documentHtmlStr = dxlExporter.exportDxl(getDocument());
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder newDocumentBuilder = docBuilderFactory.newDocumentBuilder();
 		documentHtmlStr = LotusUtils.removeDTDInfoFromXML(documentHtmlStr);
@@ -73,8 +106,7 @@ public class RichTextProcessor {
 	}
 	
 	
-	private static Map<String, String> getNotesBitmapData(org.w3c.dom.Document documentDOM, DB cimAPPSMongoDb,
-			String str_number) {
+	private  Map<String, String> getRichTextDataAsMap(org.w3c.dom.Document documentDOM) {
 
 		Map<String, String> richtextDataMap = new HashMap<String, String>();
 		NodeList richTextElements = documentDOM.getElementsByTagName("richtext");
@@ -91,9 +123,9 @@ public class RichTextProcessor {
 
 	}
 
-	private static void handleRichTExtElement(Map<String, String> richtextDataMap, int imageCounter,Node richTextEle) {
+	private  void handleRichTExtElement(Map<String, String> richtextDataMap, int imageCounter,Node richTextEle) {
 		NamedNodeMap richTextItemParentNode = richTextEle.getParentNode().getAttributes();
-		System.out.println("Item Name : " + richTextItemParentNode.getNamedItem("name").getNodeValue());
+		//System.out.println("Item Name : " + richTextItemParentNode.getNamedItem("name").getNodeValue());
 		List<String> richtextDataLines = new ArrayList<String>();
 		String itemName = richTextItemParentNode.getNamedItem("name").getNodeValue();
 		if (richTextEle.getNodeType() == Node.ELEMENT_NODE) {
@@ -101,21 +133,21 @@ public class RichTextProcessor {
 			NodeList childNodes = richTextElement.getChildNodes();
 			for (int richTextSubElementCounter = 0; richTextSubElementCounter < childNodes.getLength(); richTextSubElementCounter++) {
 				Node richTextSubElement = childNodes.item(richTextSubElementCounter);
-				handleRichTextChildElements(imageCounter, richtextDataLines, childNodes, richTextSubElement);
+				handleRichTextChildElements(imageCounter, richtextDataLines, childNodes, richTextSubElement,itemName);
 			}
 			richtextDataMap.put(itemName, StringUtils.join(richtextDataLines,"\n"));
 			//System.out.println("RichTExt Data: <> "+richtextDataLines.toString());
 		}
 	}
 
-	private static void handleRichTextChildElements(int imageCounter, List<String> richtextDataLines,NodeList childNodes, Node richTextSubElement) {
+	private  void handleRichTextChildElements(int imageCounter, List<String> richtextDataLines,NodeList childNodes, Node richTextSubElement, String itemName) {
 		if(richTextSubElement.hasChildNodes()){
-			getNodeValueFromElementLsist(richTextSubElement,richtextDataLines,imageCounter);
+			getNodeValueFromElementLsist(richTextSubElement,richtextDataLines,imageCounter,itemName);
 		}
-		System.out.println(childNodes.toString());
+		//System.out.println(childNodes.toString());
 	}
 
-	private static void getNodeValueFromElementLsist(Node richTextSubElement, List<String> richtextDataLines, int imageCounter) {
+	private  void getNodeValueFromElementLsist(Node richTextSubElement, List<String> richtextDataLines, int imageCounter, String itemName) {
 		if (richTextSubElement.getNodeType() == Node.ELEMENT_NODE && richTextSubElement.hasChildNodes()) {
 			//if (!richTextSubElement.getNodeName().equalsIgnoreCase("gif")|| !richTextSubElement.getNodeName().equalsIgnoreCase("attachmentref")) {
 				NodeList childNodes = richTextSubElement.getChildNodes();
@@ -123,7 +155,7 @@ public class RichTextProcessor {
 					Node childNode = childNodes.item(childEleCounter);
 					if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.hasChildNodes()) {
 						if (childNode.getNodeName().equalsIgnoreCase("run")) {
-							System.out.println("Text value" + childNode.getTextContent());
+							//System.out.println("Text value" + childNode.getTextContent());
 							richtextDataLines.add(childNode.getTextContent());
 						} else if (childNode.getNodeName().equalsIgnoreCase("picture")) {
 							if (!childNode.getParentNode().getNodeName().equalsIgnoreCase("attachmentref")) {
@@ -133,7 +165,7 @@ public class RichTextProcessor {
 										&& gifImageNode.getNodeName().equalsIgnoreCase("gif")) {
 									Element imageElement = (Element) gifImageNode;
 									String imageByteDataStr = imageElement.getTextContent();
-									String fileName  =  "image_"+imageCounter+".jpg";
+									String fileName  =  getStrNumber()+"_"+itemName+"_"+imageCounter+".jpg";
 									richtextDataLines.add(buildEmeddedPbjectDownloadURL(fileName));
 									decodeImagebyteCodeANdWriteImagesToDisk(imageByteDataStr, fileName);
 								}
@@ -154,23 +186,46 @@ public class RichTextProcessor {
 		return "<a href=\"GetEmbeddedObjs?fileName="+fileName+"\">"+fileName+"</a>"+"<br/>";
 	}
 	
-		private static void decodeImagebyteCodeANdWriteImagesToDisk(String imageByteDataStr, String fileName) {
-	        try {
-	            System.out.println("Writing Image Fils to Disk >> ");
-	            String dirName = "C:\\app\\" + fileName;
-	            //FileOutputStream outputStream = new FileOutputStream("C:\\app\\inLineImage" + imageCount + ".jpg");
+	private  void decodeImagebyteCodeANdWriteImagesToDisk(String imageByteDataStr, String fileName) {
+		try {
+			System.out.println("Writing Image Fils to Disk >> ");
+			String dirName = "C:\\app\\" + fileName;
+			byte[] bytearray = Base64.decodeBase64(imageByteDataStr);
+			BufferedImage imag = ImageIO.read(new ByteArrayInputStream(bytearray));
+			ImageIO.write(imag, "jpg", new File(dirName));
+			System.out.println("Writing Image Fils to Disk Completed ");
+			System.out.println("Writing Image File into Mongo Db Start");
+			daoImpl.saveEmbeddedObject(dirName, fileName);
+			System.out.println("Writing Image File into Mongo Db Completed");
+		} catch (FileNotFoundException ex) {
+			System.out.println("Exception : " + ex);
+		} catch (IOException ex) {
+			System.out.println("Exception : " + ex);
+		}
+	}
+		
+	public  void processEmbeddedObjectsAndSaveToMongoDB(Item item) throws NotesException{
 
-	            byte[] bytearray = Base64.decodeBase64(imageByteDataStr);
-	            //System.out.println(Arrays.toString(bytearray));
-	            BufferedImage imag = ImageIO.read(new ByteArrayInputStream(bytearray));
-	            ImageIO.write(imag, "jpg", new File(dirName));
-	            //outputStream.write(imageByteDataStr.getBytes());
-	            //outputStream.close();
-	            System.out.println("Writing Image Fils to Disk Completed ");
-	        } catch (FileNotFoundException ex) {
-	            System.out.println("Exception : " + ex);
-	        } catch (IOException ex) {
-	            System.out.println("Exception : " + ex);
-	        }
-	    }
+		RichTextItem riItem = (RichTextItem) item;
+		Vector embv = riItem.getEmbeddedObjects(); //lotus notes embedded objects wont pass into arraylists directly
+		ArrayList<?> emb = new ArrayList<>(embv);
+		if (emb.size() > 0) {
+		    for (Object emb1 : emb) {
+		        EmbeddedObject embObj = (EmbeddedObject) emb1;
+		            if (embObj.getSource().contains(".") && embObj.getFileSize() > 0) {
+		                StringBuilder embeddedObjectFileName = Commonutility.buildAttachemntName(embObj, getStrNumber(), item);
+		                String path = "c:\\app\\" + embObj.getSource();
+		                //**must test to see if the embedded object is a file that can be extracted
+		                if ("SNPBYA03191203049".equals(getStrNumber()) && embObj.getSource().contains(".JRP") || "SNPBYA04271203069".equals(getStrNumber())) {
+		                    // bypassing these chart files - at least one is corrupt and cannot be extracted - lotus notes Checksum error
+		                    //looking at the STR in Lotus notes shows the files are NOT exported in the same order as they appear so finding out
+		                    //which file(s) is the culpret would require multiple iterations and Lotus Notes does not have a catch for the exception
+		                } else {
+		                    embObj.extractFile(path);
+		                    daoImpl.saveEmbeddedObject( path, embeddedObjectFileName.toString());
+		                }
+		        }
+		    }
+		}
+	}
 }

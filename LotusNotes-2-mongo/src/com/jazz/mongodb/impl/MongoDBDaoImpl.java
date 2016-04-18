@@ -12,11 +12,17 @@ import com.mongodb.gridfs.GridFSInputFile;
 
 public class MongoDBDaoImpl {
 	
-	 public static void saveEmbeddedObject(DB cimAppsMongoDB, String filepath, String fileName) {
+	private DB cimAppsDB;
+	
+	 public MongoDBDaoImpl(DB cimAppsDB) {
+		 this.cimAppsDB = cimAppsDB;
+	}
+
+	public  void saveEmbeddedObject(String filepath, String fileName) {
 	        try {
 	            File docFile = new File(filepath);
 	            // create a "cimappsSTR" namespace
-	            GridFS gfscimapps = new GridFS(cimAppsMongoDB, "cimappsSTR1");
+	            GridFS gfscimapps = new GridFS(this.cimAppsDB, "cimappsSTR1");
 	            // remove the image file from mongoDB
 	            // try query not on file name but on the id or use find for the _id
 	            //gfscimapps.remove(gfscimapps.findOne(ObjName.toString())); //this removes all previous GridFS entries even though it shouldnt
@@ -36,4 +42,12 @@ public class MongoDBDaoImpl {
 	        }
 	    }
 
+	public DB getCimAppsDB() {
+		return cimAppsDB;
+	}
+	public void setCimAppsDB(DB cimAppsDB) {
+		this.cimAppsDB = cimAppsDB;
+	}
+	
+	
 }

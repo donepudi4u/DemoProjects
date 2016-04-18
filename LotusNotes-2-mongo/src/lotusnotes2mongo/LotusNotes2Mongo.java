@@ -5,29 +5,10 @@
  */
 package lotusnotes2mongo;
 
-/**
- *
- * @author whitnem
- */
-import com.jazz.common.utils.LotusUtils;
-import com.jazz.lotusnotes.richText.procesessor.RichTextProcessor;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
-
-import com.mongodb.WriteResult;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSInputFile;
-import com.mongodb.util.JSON;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
@@ -36,22 +17,21 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.Vector; // Lotus Notes Domino requires this object usage and any other Collection class/interface will not work
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import lotus.domino.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.util.Base64;
 import org.htmlparser.filters.NodeClassFilter;
@@ -63,6 +43,38 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+/**
+ *
+ * @author whitnem
+ */
+import com.google.gson.Gson;
+import com.jazz.common.utils.JSONUtils;
+import com.jazz.common.utils.LotusUtils;
+import com.jazz.lotusnotes.richText.procesessor.RichTextProcessor;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
+import com.mongodb.util.JSON;
+
+import lotus.domino.Database;
+import lotus.domino.DateTime;
+import lotus.domino.Document;
+import lotus.domino.DocumentCollection;
+import lotus.domino.DxlExporter;
+import lotus.domino.EmbeddedObject;
+import lotus.domino.Item;
+import lotus.domino.NotesException;
+import lotus.domino.NotesFactory;
+import lotus.domino.RichTextItem;
+import lotus.domino.Session;
 
 public class LotusNotes2Mongo {
 
@@ -109,8 +121,9 @@ public class LotusNotes2Mongo {
                             //System.out.println("the str_number in this doc is blank - it is being bypassed. blank counter = " + blank_counter);
                         } else if (isVallidSTRNumber(str_number)) {
                             System.out.println("STR Number : " + str_number);
+                            RichTextProcessor richTextProcessor = new RichTextProcessor(db2, session, doc, str_number);
                         //    Map<String, List<String>> imagesFilesMap = processImagesINDocument(doc, session, db2, str_number);
-                            Map<String, String> richTextData = RichTextProcessor.processRichTextData(db2, session,doc, str_number);
+                            Map<String, String> richTextData = richTextProcessor.processRichTextData();
                             db1.setLength(0);
                             if (doc.hasEmbedded()) {
                                 //there are embedded objects in this doc at the document level
@@ -124,6 +137,7 @@ public class LotusNotes2Mongo {
                                     for (int i = 0; i < v.size(); i++) {
                                         EmbeddedObject eo = (EmbeddedObject) v.get(i);
                                         String eos = eo.getName() + " of " + eo.getClassName();
+                                        System.out.println("Etachment name at Document Level: " +eos);
                                     }
                                 }
                             }
@@ -134,11 +148,11 @@ public class LotusNotes2Mongo {
                                 attNames.clear();
                                 String iname = item.getName(); //this is the name of the field in the doc designer form
                                 if (item.getType() == Item.RICHTEXT) {
-                                    processRichTextDataFromLotusNotesDocument(db2, attNames, item, str_number);
-                                	//RichTextProcessor.processRichTextData(db2, attNames, item, str_number);
-                                	//RichTextProcessor.processRichTextData(db2, session,doc, str_number);
+                                    //processRichTextDataFromLotusNotesDocument(db2, attNames, item, str_number);
+                                	richTextProcessor.processEmbeddedObjectsAndSaveToMongoDB(item);
                                 }
-                                printJsonItem(db1, session, item, firstItem, attNames, null);
+                                Map<String, List<String>> imagesFilesMap = new HashMap<String, List<String>>();
+                                printJsonItem(db1, session, item, firstItem, attNames, imagesFilesMap);
 
                                 if (item != null) {
                                     item.recycle();
@@ -147,6 +161,13 @@ public class LotusNotes2Mongo {
                             }
                             db1.append("}");
                             String objstr = db1.toString();
+                            Gson gson = new Gson();
+                            if (richTextData != null){
+                            	String jsonStr = gson.toJson(db1.toString());
+                            	String richTextJsonStr = gson.toJson(richTextData);
+                            	String mergeJSONObjects = JSONUtils.mergeJSONObjects(jsonStr, richTextJsonStr);
+                            	objstr = mergeJSONObjects;
+                            }
                             DBCollection collection1 = db2.getCollection("strdocs1");
                             // delete document from mongo if it exists....
                             BasicDBObject docQuery = new BasicDBObject();
@@ -331,7 +352,7 @@ public class LotusNotes2Mongo {
                         || item.getType() == Item.NAMES
                         || item.getType() == Item.NUMBERS
                         || item.getType() == Item.READERS
-                        || item.getType() == Item.RICHTEXT
+                     //   || item.getType() == Item.RICHTEXT
                         || item.getType() == Item.TEXT) {
                     v = item.getValues();
 
@@ -340,7 +361,8 @@ public class LotusNotes2Mongo {
                         if (itemName.contains("$")) {
                             itemName = itemName.replace("$", "");
                         }
-                        if (attNames.size() > 0) {
+                        // no need to of processing Attachments in Rich text : processed separately.
+                       /* if (attNames.size() > 0) {
                             //if (itemName.contains("Attachments") && attNames.size() > 0) {
                             //there should only be 1 element in the vector so revise it to hold the attachments also
                             StringBuilder sb = new StringBuilder();
@@ -355,7 +377,7 @@ public class LotusNotes2Mongo {
                             System.out.println("finalSb : " + finalsb);
 
                             //item.setValues(vct) ;//doesnt seem to work
-                        }
+                        }*/
                         if (itemName.contains("STR_Number")) {
                             String firstJson = "{\"_id\":\"" + item.getValueString() + "\"";
                             db1.replace(0, 0, firstJson);
@@ -712,7 +734,7 @@ public class LotusNotes2Mongo {
     }
 
     private static boolean isVallidSTRNumber(String str_number) {
-        return !str_number.isEmpty() && StringUtils.trim(str_number).equalsIgnoreCase("SNPBYK04150200934");//|| (StringUtils.trim(str_number).equalsIgnoreCase("SNPBGE03080000018")));SNPBSK02211603803, SNPBAJ11290100766, SNPBYK04150200934
+        return !str_number.isEmpty() && StringUtils.trim(str_number).equalsIgnoreCase("SNPBAJ11290100766");//|| (StringUtils.trim(str_number).equalsIgnoreCase("SNPBGE03080000018")));SNPBSK02211603803, SNPBAJ11290100766, SNPBYK04150200934
     }
 
     private static void saveEmbeddedObjectGroup(Item item, String str_number, Mongo mongo, HashSet<String> attNames, String path2) {
